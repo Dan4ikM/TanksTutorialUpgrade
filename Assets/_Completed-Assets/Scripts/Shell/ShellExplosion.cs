@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Complete
@@ -33,7 +34,10 @@ namespace Complete
 
                 // If they don't have a rigidbody, go on to the next collider.
                 if (!targetRigidbody)
+                {
+                    CheckObstacle(colliders[i]);
                     continue;
+                }
 
                 // Add an explosion force.
                 targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
@@ -69,6 +73,20 @@ namespace Complete
             Destroy (gameObject);
         }
 
+        private void CheckObstacle(Collider targetCollider)
+        {
+            ObstacleHealth obstacleHealth = targetCollider.GetComponent<ObstacleHealth>();
+
+            // If there is no TankHealth script attached to the gameobject, go on to the next collider.
+            if (!obstacleHealth)
+                return;
+
+            // Calculate the amount of damage the target should take based on it's distance from the shell.
+            float damage = CalculateDamage(targetCollider.transform.position);
+
+            // Deal this damage to the tank.
+            obstacleHealth.TakeDamage(damage);
+        }
 
         private float CalculateDamage (Vector3 targetPosition)
         {
