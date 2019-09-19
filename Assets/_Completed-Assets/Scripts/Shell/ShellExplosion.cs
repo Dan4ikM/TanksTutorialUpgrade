@@ -35,7 +35,15 @@ namespace Complete
                 // If they don't have a rigidbody, go on to the next collider.
                 if (!targetRigidbody)
                 {
-                    CheckObstacle(colliders[i]);
+                    // Find the TankHealth script associated with the rigidbody.
+                    ObstacleHealth obstacleHealth = colliders[i].gameObject.GetComponent<ObstacleHealth>();
+
+                    // If there is no TankHealth script attached to the gameobject, go on to the next collider.
+                    if (!obstacleHealth)
+                        continue;
+
+                    // Deal this damage to the tank.
+                    obstacleHealth.TakeDamage(m_MaxDamage);
                     continue;
                 }
 
@@ -43,7 +51,7 @@ namespace Complete
                 targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
 
                 // Find the TankHealth script associated with the rigidbody.
-                TankHealth targetHealth = targetRigidbody.GetComponent<TankHealth> ();
+                ObstacleHealth targetHealth = targetRigidbody.GetComponent<ObstacleHealth>();
 
                 // If there is no TankHealth script attached to the gameobject, go on to the next collider.
                 if (!targetHealth)
@@ -71,21 +79,6 @@ namespace Complete
 
             // Destroy the shell.
             Destroy (gameObject);
-        }
-
-        private void CheckObstacle(Collider targetCollider)
-        {
-            ObstacleHealth obstacleHealth = targetCollider.GetComponent<ObstacleHealth>();
-
-            // If there is no TankHealth script attached to the gameobject, go on to the next collider.
-            if (!obstacleHealth)
-                return;
-
-            // Calculate the amount of damage the target should take based on it's distance from the shell.
-            float damage = CalculateDamage(targetCollider.transform.position);
-
-            // Deal this damage to the tank.
-            obstacleHealth.TakeDamage(damage);
         }
 
         private float CalculateDamage (Vector3 targetPosition)

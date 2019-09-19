@@ -8,10 +8,10 @@ namespace Complete
         public GameObject m_ExplosionPrefab;                // A prefab that will be instantiated in Awake, then used whenever the tank dies.
 
 
-        private AudioSource m_ExplosionAudio;               // The audio source to play when the tank explodes.
-        private ParticleSystem m_ExplosionParticles;        // The particle system the will play when the tank is destroyed.
-        private float m_CurrentHealth;                      // How much health the tank currently has.
-        private bool m_Dead;                                // Has the Obstacle been reduced beyond zero health yet?
+        protected AudioSource m_ExplosionAudio;               // The audio source to play when the tank explodes.
+        protected ParticleSystem m_ExplosionParticles;        // The particle system the will play when the tank is destroyed.
+        protected float m_CurrentHealth;                      // How much health the tank currently has.
+        protected bool m_Dead;                                // Has the Obstacle been reduced beyond zero health yet?
 
 
         private void Awake()
@@ -35,7 +35,7 @@ namespace Complete
         }
 
 
-        public void TakeDamage(float amount)
+        public virtual void TakeDamage(float amount)
         {
             // Reduce current health by the amount of damage done.
             m_CurrentHealth -= amount;;
@@ -48,7 +48,7 @@ namespace Complete
         }
 
 
-        private void OnDeath()
+        protected void OnDeath()
         {
             // Set the flag so that this function is only called once.
             m_Dead = true;
