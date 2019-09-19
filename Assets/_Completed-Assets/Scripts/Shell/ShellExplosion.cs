@@ -31,37 +31,23 @@ namespace Complete
             {
                 // ... and find their rigidbody.
                 Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody> ();
-
+                
                 // If they don't have a rigidbody, go on to the next collider.
-                if (!targetRigidbody)
-                {
-                    // Find the TankHealth script associated with the rigidbody.
-                    ObstacleHealth obstacleHealth = colliders[i].gameObject.GetComponent<ObstacleHealth>();
-
-                    // If there is no TankHealth script attached to the gameobject, go on to the next collider.
-                    if (!obstacleHealth)
-                        continue;
-
-                    // Deal this damage to the tank.
-                    obstacleHealth.TakeDamage(m_MaxDamage);
-                    continue;
-                }
-
-                // Add an explosion force.
-                targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
-
+                if (targetRigidbody)
+                    targetRigidbody.AddExplosionForce(m_ExplosionForce, transform.position, m_ExplosionRadius);
+                    
                 // Find the TankHealth script associated with the rigidbody.
-                ObstacleHealth targetHealth = targetRigidbody.GetComponent<ObstacleHealth>();
+                ObstacleHealth obstacleHealth = colliders[i].gameObject.GetComponent<ObstacleHealth>();
 
                 // If there is no TankHealth script attached to the gameobject, go on to the next collider.
-                if (!targetHealth)
+                if (!obstacleHealth)
                     continue;
 
                 // Calculate the amount of damage the target should take based on it's distance from the shell.
-                float damage = CalculateDamage (targetRigidbody.position);
-
+                float damage = CalculateDamage (colliders[i].gameObject.transform.position);
+               
                 // Deal this damage to the tank.
-                targetHealth.TakeDamage (damage);
+                obstacleHealth.TakeDamage (damage);
             }
 
             // Unparent the particles from the shell.
