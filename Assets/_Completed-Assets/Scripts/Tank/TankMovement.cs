@@ -137,5 +137,45 @@ namespace Complete
             // Apply this rotation to the rigidbody's rotation.
             m_Rigidbody.MoveRotation (m_Rigidbody.rotation * turnRotation);
         }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (m_MovementInputValue != 1)
+                return;
+
+            Vector3 boxSize = GetComponent<BoxCollider>().size;
+            Vector3 forward = transform.forward * boxSize.z/2;
+
+            foreach (ContactPoint point in collision.contacts)
+            {
+                if ((point.point.x - forward.x)*(point.point.z - forward.z) < Mathf.Pow(boxSize.x/2,2))
+                {
+                    Ram(collision.gameObject);
+                    break;
+                }
+            }
+        }
+
+        private void Ram(GameObject collisionObject)
+        {
+            // Find the TankHealth script associated with the rigidbody.
+            TankHealth targetHealth = collisionObject.GetComponent<TankHealth>();
+
+            // If there is no TankHealth script attached to the gameobject, go on to the next collider.
+            if (!targetHealth)
+            {
+                // Find the TankHealth script associated with the rigidbody.
+                ObstacleHealth obstacleHealth = collisionObject.GetComponent<ObstacleHealth>();
+
+                // If there is no TankHealth script attached to the gameobject, go on to the next collider.
+                if (!obstacleHealth)
+                    return;
+
+                obstacleHealth.TakeDamage(m_Speed);
+                return;
+            }
+
+            targetHealth.TakeDamage(m_Speed);
+        }
     }
 }
