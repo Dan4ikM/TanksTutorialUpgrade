@@ -158,24 +158,15 @@ namespace Complete
 
         private void Ram(GameObject collisionObject)
         {
-            // Find the TankHealth script associated with the rigidbody.
-            TankHealth targetHealth = collisionObject.GetComponent<TankHealth>();
+            // Find the ObstacleHealth script associated with the rigidbody.
+            ObstacleHealth obstacleHealth = collisionObject.GetComponent<ObstacleHealth>();
 
             // If there is no TankHealth script attached to the gameobject, go on to the next collider.
-            if (!targetHealth)
-            {
-                // Find the TankHealth script associated with the rigidbody.
-                ObstacleHealth obstacleHealth = collisionObject.GetComponent<ObstacleHealth>();
-
-                // If there is no TankHealth script attached to the gameobject, go on to the next collider.
-                if (!obstacleHealth)
-                    return;
-
-                obstacleHealth.TakeDamage(m_Speed);
+            if (!obstacleHealth)
                 return;
-            }
 
-            targetHealth.TakeDamage(m_Speed);
+            obstacleHealth.TakeDamage(m_Speed);
+            return;
         }
     }
 }
